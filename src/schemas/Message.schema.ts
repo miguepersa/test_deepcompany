@@ -18,5 +18,8 @@ export class Message {
 
     @Prop({ required: true })
     fav: boolean;
+
+    @Prop({ type: Date, default: Date.now })
+    createdAt: Date;
 }
 export const MessageSchema = SchemaFactory.createForClass(Message);

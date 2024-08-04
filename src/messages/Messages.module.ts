@@ -4,6 +4,7 @@ import { Message, MessageSchema } from "src/schemas/Message.schema";
 import { User, UserSchema } from "src/schemas/User.schema";
 import { MessagesService } from "./Messages.service";
 import { MessagesController } from "./Messages.controller";
+import { JwtAuthGuard } from "src/auth/guards/jwt.guard";
 
 @Module({
     imports: [
@@ -18,7 +19,7 @@ import { MessagesController } from "./Messages.controller";
             }
         ])
     ],
-    providers: [MessagesService],
+    providers: [MessagesService, JwtAuthGuard],
     controllers: [MessagesController]
 })
 export class MessagesModule {}

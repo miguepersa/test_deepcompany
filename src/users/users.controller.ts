@@ -6,12 +6,14 @@ import {
     HttpException, 
     Param, 
     Patch, 
-    Post 
+    Post, 
+    Req, 
+    UseGuards
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/CreateUser.dto";
 import mongoose from "mongoose";
-import { UpdateUserDto } from "./dto/UpdateUser.dto";
+import { JwtAuthGuard } from "src/auth/guards/jwt.guard";
 
 @Controller('users')
 export class UsersController {
@@ -24,11 +26,13 @@ export class UsersController {
     }
 
     @Get()
+    @UseGuards(JwtAuthGuard)
     listUsers() {
         return this.usersService.getUsers();
     }
 
     @Get(':id')
+    @UseGuards(JwtAuthGuard)
     async getUserById(@Param('id') id: string) {
 
         const isValid = mongoose.Types.ObjectId.isValid(id);
@@ -42,16 +46,8 @@ export class UsersController {
         return findUser;
     }
 
-    @Patch(':id')
-    updateUser( @Param('id') id: string, @Body() updateUserDto: UpdateUserDto ) {
-        
-        const isValid = mongoose.Types.ObjectId.isValid(id);
-        if (!isValid) throw new HttpException('User not found', 404);
-      
-        return this.usersService.updateUser(id, updateUserDto);
-    }
-
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     async deleteUser(@Param('id') id: string ) { 
         const isValid = mongoose.Types.ObjectId.isValid(id);
         if (!isValid) throw new HttpException('User not found', 404);
