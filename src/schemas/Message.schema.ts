@@ -13,10 +13,10 @@ export class Message {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
     receiver: User;    
 
-    @Prop({ required: true })
+    @Prop({ required: false })
     read: boolean;
 
-    @Prop({ required: true })
+    @Prop({ required: false })
     fav: boolean;
 
     @Prop({ type: Date, default: Date.now })
