@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthPayloadDto } from './dto/auth.dto';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalGuard } from './guards/local.guard';
 import { JwtAuthGuard } from './guards/jwt.guard';
@@ -16,10 +15,10 @@ export class AuthController {
         return req.user;
     }
 
-    @Get('status')
+    @Post('logout')
     @UseGuards(JwtAuthGuard)
-    status(@Req() req: Request) {
-
+    async logout(@Req() req: Request) {
+        this.authService.blacklistToken(req.headers.authorization)
     }
 
 }

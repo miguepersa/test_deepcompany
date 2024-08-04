@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthPayloadDto } from './dto/auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/User.schema';
@@ -7,6 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+
+    private blacklist = new Set<string>();
 
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
@@ -22,6 +24,16 @@ export class AuthService {
             const { pwd, ...loggedUser} = user;
             return this.jwtService.sign(loggedUser);
         }
+
+        throw new UnauthorizedException();
+    }
+
+    blacklistToken(token) {
+        this.blacklist.add(token)
+    }
+
+    isBlacklistedToken(token) {
+        return this.blacklist.has(token);
     }
 
 }
